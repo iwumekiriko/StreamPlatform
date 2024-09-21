@@ -1,0 +1,20 @@
+﻿@model StreamPlatform.ViewModels.EditProfileViewModel
+
+<h2>Настройки аккаунта</h2>
+
+<form asp-action="EditProfile" method="post">
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+</form>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}

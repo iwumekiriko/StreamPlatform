@@ -1,0 +1,25 @@
+﻿body {
+    width: 100%;
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.index-image {
+    width: 400px;
+    height: 200px;
+}
+
+.streams-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: row;
+    gap: 10px;
+}
+.streams-grid__item {
+    display: flex;
+    flex-direction: column;
+    color: #7400cc;
+}

@@ -1,0 +1,65 @@
+﻿@model StreamPlatform.Models.Stream
+
+<h1>Личный кабинет</h1>
+
+<p>Добро пожаловать, @Model.User.UserName</p>
+
+<div>
+    <h3>Информация о потоке</h3>
+    <p><strong>URL стрима:</strong> @Model.StreamUrl</p>
+    <p><strong>Уникальный ключ:</strong> @Model.StreamKey</p>
+    <p><strong>Статус:</strong> @(Model.IsActive ? "Активен" : "Не активен")</p>
+    
+    <div>
+        <form id="edit-stream-name-form" style="display: flex; gap: 2px">
+            <div style="display: flex; gap: 10px">
+                <p><strong>Название стрима:</strong></p>
+                <div class="form-group">
+                    <input type="text" id="streamNameInput" class="form-control" value="@Model.StreamName"/>
+                </div>
+            </div>
+            <button type="button" id="saveStreamNameBtn" class="btn btn-primary">Сохранить</button>
+        </form>
+    </div>
+
+    <form asp-action="EditPreview" method="post" enctype="multipart/form-data" style="display: flex; gap: 2px">
+        <div style="display: flex; gap: 10px">
+            <p><strong>Превью:</strong></p>
+            <div class="form-group">
+                <input type="file" name="preview" class="form-control" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+
+    @if (!string.IsNullOrEmpty(@Model.PreviewImageUrl))
+    {
+        <h3>Превью стрима</h3>
+        <img src="@Model.PreviewImageUrl" alt="Preview Image" style="width: 300px;" />
+    }
+
+</div>
+
+<p>
+    <a asp-controller="Account" asp-action="EditProfile">Manage Profile</a>
+</p>
+
+<p>
+    <a asp-controller="Account" asp-action="Logout">Выйти</a>
+</p>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#saveStreamNameBtn').click(function() {
+            var newStreamName = $('#streamNameInput').val();
+            $.ajax({
+                url: '@Url.Action("UpdateStreamName", "Account")',
+                method: 'POST',
+                data: {
+                    streamName: newStreamName
+                }
+            });
+        });
+    });
+</script>
