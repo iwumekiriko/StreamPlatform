@@ -8,7 +8,7 @@ obj/
 /obj/
 Migrations/
 /Migrations/
-wwwroot/
+uploads/
 node_modules/
 
 #Ignore db/log files
