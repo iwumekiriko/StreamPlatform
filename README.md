@@ -3,4 +3,4 @@
 ## QuickStart
 
 1. Install nginx for [Windows](https://nginx.org/en/docs/windows.html) or [Linux](https://nginx.org/en/linux_packages.html)
-2. Go to your nginx path, and copy [settings]() for nginx.conf file: [your_nginx_path/conf/nginx.conf]
+2. Go to your nginx path, and copy [settings](https://github.com/iwumekiriko/StreamPlatform/blob/main/StreamPlatform/nginx.conf) for nginx.conf file: [your_nginx_path/conf/nginx.conf]
