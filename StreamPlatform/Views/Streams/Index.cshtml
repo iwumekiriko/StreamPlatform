@@ -5,24 +5,11 @@
 <div class="streams-grid">
     @foreach (var stream in Model)
     {
-        <a asp-action="Details" asp-route-id="@stream.UserId">
+        <a asp-action="Details" asp-route-username="@stream.User.UserName">
             <div class="streams-grid__item">
                 <img src=@stream.PreviewImageUrl alt="Preview Image" class="index-image" />
                 <span>@(stream.StreamName.Length <= 30 ? stream.StreamName : $"{stream.StreamName.Substring(0, 30)}...")</span>
             </div>
         </a>
     }
-</div>  
-
-<script src="~/lib/signalr/signalr.js"></script>
-<script>
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/streamhub")
-        .build();
-
-    connection.start().then(() => {
-        console.log("Соединение установлено");
-    }).catch(err => {
-        console.error("Ошибка подключения:", err);
-    });
-</script>
+</div> 

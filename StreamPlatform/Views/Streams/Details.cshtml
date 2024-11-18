@@ -1,47 +1,66 @@
 ﻿@model StreamPlatform.Models.Stream
 
-<h1>Детали потока</h1>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<title>@Model.User.UserName's stream</title>
 
 <div>
-    <h3>Имя потока: @Model.StreamName</h3>
-    <p><strong>URL потока:</strong> <a href="@Model.StreamUrl">@Model.StreamUrl</a></p>
-    <p><strong>Ключ потока:</strong> @Model.StreamKey</p>
-    <p><strong>Активен:</strong> @(Model.IsActive ? "Да" : "Нет")</p>
+    <h3>@Model.StreamName</h3>
 
-    @if (Model.IsActive)
-    {
-        <h3>Видео поток</h3>
+    <!-- Видео контейнер -->
+    <video id="my-video" controls preload="auto" width="1280" height="720"></video>
 
-        <!-- Видео контейнер -->
-        <video id="my-video" controls preload="auto" width="600" height="300"></video>
-
-        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-        <script>
-            if (Hls.isSupported()) {
-                var video = document.getElementById('my-video');
-                var hls = new Hls();
-                var streamUrl = "http://localhost/live/f90e4c43-66cb-4610-9d5d-96c1cc5a85f9.m3u8";
-                hls.loadSource(streamUrl);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    video.play();
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = "http://localhost/live/f90e4c43-66cb-4610-9d5d-96c1cc5a85f9.m3u8";
-                video.addEventListener('loadedmetadata', function () {
-                    video.play();
-                });
-            } else {
-                alert('Ваш браузер не поддерживает HLS потоковое видео.');
-            }
-        </script>
-    }
-    else
-    {
-        <p>Поток не активен в данный момент.</p>
-    }
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        if (Hls.isSupported()) {
+            var video = document.getElementById('my-video');
+            var hls = new Hls();
+            var streamUrl = "http://localhost/live/" + '@Html.Raw(Model.StreamKey)' + ".m3u8";
+            hls.loadSource(streamUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = "http://localhost/live/" + '@Html.Raw(Model.StreamKey)' + ".m3u8";
+            video.addEventListener('loadedmetadata', function () {
+                video.play();
+            });
+        } else {
+            alert('Ваш браузер не поддерживает HLS потоковое видео.');
+        }
+    </script>
 </div>
+
+<div style="display: flex; justify-content: space-between";>
+    <p> @Model.User.UserName </p>
+    <div id="viewer-count"></div>
+</div>
+
 
 <p>
     <a href="@Url.Action("Index", "Streams")">Вернуться к списку потоков</a>
 </p>
+
+
+
+<script>
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/stream")
+        .build();
+
+    connection.start().then(function () {
+        console.log('Connection established!');
+
+        connection.invoke("JoinStream");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    connection.on("UpdateUserCount", function (count) {
+        document.getElementById("viewer-count").textContent = "Зрителей: " + count;
+    });
+
+    window.addEventListener('beforeunload', function () {
+        connection.invoke("LeaveStream");
+    });
+</script>

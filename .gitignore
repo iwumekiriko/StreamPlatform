@@ -38,3 +38,6 @@ node_modules/
 
 #Ignore csproj.user files
 *.user
+
+#Ignore .pubxml
+*.pubxml

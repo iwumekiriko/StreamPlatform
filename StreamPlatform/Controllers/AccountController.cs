@@ -79,7 +79,7 @@ public class AccountController : Controller
         {
             var result = await _signInManager
                 .PasswordSignInAsync(
-                model.Email, model.Password,
+                model.Username, model.Password,
                 model.RememberMe, lockoutOnFailure: false
             );
             if (result.Succeeded)

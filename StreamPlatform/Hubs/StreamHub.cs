@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using StreamPlatform.Models;
 
 namespace StreamPlatform.Hubs;
 
-public class StreamHub : Hub
+public class StreamHub: Hub
 {
-    public async Task JoinStream(string streamId)
+    private static int _connectedUsers = 0;
+
+    public async Task JoinStream()
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, streamId);
+        _connectedUsers++;
+        await Clients.All.SendAsync("UpdateUserCount", _connectedUsers);
     }
 
-    public async Task LeaveStream(string streamId)
+    public async Task LeaveStream()
     {
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, streamId);
-    }
-
-    public async Task SendStreamMessage(string streamId, string message)
-    {
-        await Clients.Group(streamId).SendAsync("ReceiveMessage", message);
+        _connectedUsers--;
+        await Clients.All.SendAsync("UpdateUserCount", _connectedUsers);
     }
 }

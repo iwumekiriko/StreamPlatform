@@ -41,46 +41,17 @@ public class Startup(IConfiguration configuration)
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Streams}/{action=Index}/{id?}");
+                name: "default",
+                pattern: "{controller=Streams}/{action=Index}");
             endpoints.MapControllerRoute(
                 name: "cabinet",
-                pattern: "{controller=Account}/{action=Cabinet}/{id?}",
+                pattern: "{controller=Account}/{action=Cabinet}",
                 defaults: new { controller = "Account", action = "Cabinet" });
-            endpoints.MapHub<StreamHub>("/streamhub");
+            endpoints.MapControllerRoute(
+                name: "live",
+                pattern: "live/{username}",
+                defaults: new { controller = "Streams", action = "Details" });
+            endpoints.MapHub<StreamHub>("/stream");
         });
     }
 }
-
-
-
-
-
-
-
-
-//var builder = WebApplication.CreateBuilder(args);
-
-//// Add services to the container.
-//builder.Services.AddRazorPages();
-
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//if (!app.Environment.IsDevelopment())
-//{
-//    app.UseExceptionHandler("/Error");
-//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-//    app.UseHsts();
-//}
-
-//app.UseHttpsRedirection();
-//app.UseStaticFiles();
-
-//app.UseRouting();
-
-//app.UseAuthorization();
-
-//app.MapRazorPages();
-
-//app.Run();

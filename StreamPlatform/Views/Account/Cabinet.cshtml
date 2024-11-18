@@ -1,52 +1,71 @@
 ﻿@model StreamPlatform.Models.Stream
 
-<h1>Личный кабинет</h1>
+<h1>Личный кабинет @Model.User.UserName</h1>
 
-<p>Добро пожаловать, @Model.User.UserName</p>
+<div style="display: flex; justify-content:space-between; padding-top: 50px">
+    <div>   
+        <h3>Как начать трансляцию?</h3>
+        <div style="padding-top: 20px">
+            <p><strong>1.</strong> Запустите OBS Studio или любую альтернативу.</p>
+            <p><strong>2.</strong> Откройте настройки трансляции.</p>
+            <p><strong>3.</strong> В строке "Сервер" введите: <strong>rtmp://localhost/live/</strong>.</p>
+            <p><strong>4.</strong> В строке "Ключ потока" введите: <strong>@Model.StreamKey</strong>.</p>
+            <p><strong>5.</strong> Проверяйте, что всё работает и запускайте трансляцию!</p>
 
-<div>
-    <h3>Информация о потоке</h3>
-    <p><strong>URL стрима:</strong> @Model.StreamUrl</p>
-    <p><strong>Уникальный ключ:</strong> @Model.StreamKey</p>
-    <p><strong>Статус:</strong> @(Model.IsActive ? "Активен" : "Не активен")</p>
-    
-    <div>
-        <form id="edit-stream-name-form" style="display: flex; gap: 2px">
-            <div style="display: flex; gap: 10px">
-                <p><strong>Название стрима:</strong></p>
-                <div class="form-group">
-                    <input type="text" id="streamNameInput" class="form-control" value="@Model.StreamName"/>
-                </div>
-            </div>
-            <button type="button" id="saveStreamNameBtn" class="btn btn-primary">Сохранить</button>
-        </form>
-    </div>
+            <div style="display: flex; gap: 15px">
+                <p><strong>Статус:</strong> @(Model.IsActive ? "Активен" : "Не активен")</p>
+                <p>
+                    <a class="cabinet-button" asp-controller="Streams" asp-action="GoOnline">Go Online</a>
+                </p>
 
-    <form asp-action="EditPreview" method="post" enctype="multipart/form-data" style="display: flex; gap: 2px">
-        <div style="display: flex; gap: 10px">
-            <p><strong>Превью:</strong></p>
-            <div class="form-group">
-                <input type="file" name="preview" class="form-control" />
+                <p>
+                    <a class="cabinet-button" asp-controller="Streams" asp-action="GoOffline">Go Offline</a>
+                </p>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-    </form>
+    </div>
+   
+    <div>
+        <h3>Информация о потоке</h3>
+        <div style="padding-top: 20px;">
+            <div>
+                <form id="edit-stream-name-form" style="display: flex; gap: 2px">
+                    <div style="display: flex; gap: 10px">
+                        <p><strong>Название стрима:</strong></p>
+                        <div class="form-group">
+                            <input type="text" id="streamNameInput" class="form-control" value="@Model.StreamName" />
+                        </div>
+                    </div>
+                    <button type="button" id="saveStreamNameBtn" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
 
-    @if (!string.IsNullOrEmpty(@Model.PreviewImageUrl))
-    {
-        <h3>Превью стрима</h3>
-        <img src="@Model.PreviewImageUrl" alt="Preview Image" style="width: 300px;" />
-    }
+            <form asp-action="EditPreview" method="post" enctype="multipart/form-data" style="display: flex; gap: 2px">
+                <div style="display: flex; gap: 10px">
+                    <p><strong>Превью:</strong></p>
+                    <div class="form-group">
+                        <input type="file" name="preview" class="form-control" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </form>
 
+            <div style="margin-top: 50px;">
+                @if (!string.IsNullOrEmpty(@Model.PreviewImageUrl))
+                {
+                    <h5>Превью стрима: </h5>
+                    <img src="@Model.PreviewImageUrl" alt="Preview Image" style="width: 300px;" />
+                }
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <p>
-    <a asp-controller="Account" asp-action="EditProfile">Manage Profile</a>
+    <a class="cabinet-button" asp-controller="Account" asp-action="EditProfile">Изменить имя профиля</a>
 </p>
 
-<p>
-    <a asp-controller="Account" asp-action="Logout">Выйти</a>
-</p>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -63,3 +82,19 @@
         });
     });
 </script>
+
+<style>
+    .cabinet-button{
+        border: 1px solid;
+        text-decoration: none;
+        color: white;
+        border-radius: 4px;
+        background-color: #821bc2;
+        padding: 4px;
+    }
+
+    .cabinet-button:hover {
+        color: white;
+        padding: 6px;
+    }
+</style>
